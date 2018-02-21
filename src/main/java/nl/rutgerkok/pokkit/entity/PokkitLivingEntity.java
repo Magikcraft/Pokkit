@@ -1,19 +1,12 @@
 package nl.rutgerkok.pokkit.entity;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Objects;
-import java.util.Set;
-
+import cn.nukkit.potion.Effect;
 import nl.rutgerkok.pokkit.Pokkit;
 import nl.rutgerkok.pokkit.material.PokkitMaterialData;
 import nl.rutgerkok.pokkit.player.PokkitPlayer;
 import nl.rutgerkok.pokkit.potion.PokkitPotionEffect;
 import nl.rutgerkok.pokkit.potion.PokkitPotionEffectType;
 import nl.rutgerkok.pokkit.world.PokkitBlock;
-
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.attribute.Attribute;
@@ -28,7 +21,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
-import cn.nukkit.potion.Effect;
+import java.util.*;
 
 public class PokkitLivingEntity extends PokkitEntity implements LivingEntity {
 	public static LivingEntity toBukkit(cn.nukkit.entity.EntityLiving nukkit) {
@@ -263,8 +256,8 @@ public class PokkitLivingEntity extends PokkitEntity implements LivingEntity {
 
 	@Override
 	public void removePotionEffect(PotionEffectType type) {
-		throw Pokkit.unsupported();
-
+		// throw Pokkit.unsupported();
+		nukkit.removeEffect(type.getId());
 	}
 
 	@Override

@@ -1,17 +1,13 @@
 package nl.rutgerkok.pokkit.player;
 
 import cn.nukkit.AdventureSettings;
-import java.net.InetSocketAddress;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
-import java.util.SplittableRandom;
-import java.util.UUID;
-import java.util.stream.Collectors;
-
+import cn.nukkit.event.player.PlayerChatEvent;
+import cn.nukkit.level.particle.GenericParticle;
+import cn.nukkit.math.Vector3;
+import cn.nukkit.network.protocol.UpdateBlockPacket;
+import cn.nukkit.utils.TextFormat;
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.BaseComponent;
 import nl.rutgerkok.pokkit.*;
 import nl.rutgerkok.pokkit.entity.PokkitHumanEntity;
 import nl.rutgerkok.pokkit.inventory.PokkitInventory;
@@ -24,20 +20,8 @@ import nl.rutgerkok.pokkit.permission.PokkitPermissionAttachment;
 import nl.rutgerkok.pokkit.permission.PokkitPermissionAttachmentInfo;
 import nl.rutgerkok.pokkit.plugin.PokkitPlugin;
 import nl.rutgerkok.pokkit.potion.PokkitPotionEffect;
-
 import org.apache.commons.lang.Validate;
-import org.bukkit.Bukkit;
-import org.bukkit.Effect;
-import org.bukkit.GameMode;
-import org.bukkit.Instrument;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.Note;
-import org.bukkit.Particle;
-import org.bukkit.Sound;
-import org.bukkit.SoundCategory;
-import org.bukkit.Statistic;
-import org.bukkit.WeatherType;
+import org.bukkit.*;
 import org.bukkit.advancement.Advancement;
 import org.bukkit.advancement.AdvancementProgress;
 import org.bukkit.attribute.Attribute;
@@ -63,13 +47,9 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.scoreboard.Scoreboard;
 
-import cn.nukkit.event.player.PlayerChatEvent;
-import cn.nukkit.level.particle.GenericParticle;
-import cn.nukkit.math.Vector3;
-import cn.nukkit.network.protocol.UpdateBlockPacket;
-import cn.nukkit.utils.TextFormat;
-import net.md_5.bungee.api.ChatMessageType;
-import net.md_5.bungee.api.chat.BaseComponent;
+import java.net.InetSocketAddress;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @DelegateDeserialization(PokkitOfflinePlayer.class)
 public class PokkitPlayer extends PokkitHumanEntity implements Player {
@@ -244,6 +224,10 @@ public class PokkitPlayer extends PokkitHumanEntity implements Player {
 		}
 		return true;
 	}
+
+	/*public void removePotionEffect(PotionEffect bukkitEffect) {
+		nukkit.removeEffect(PokkitPotionEffect.toNukkit(bukkitEffect).getId());
+	}*/
 
 	@Override
 	public void awardAchievement(@SuppressWarnings("deprecation") org.bukkit.Achievement achievement) {
