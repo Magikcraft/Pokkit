@@ -1,6 +1,11 @@
 package nl.rutgerkok.pokkit.entity;
 
 import cn.nukkit.potion.Effect;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
+
 import nl.rutgerkok.pokkit.Pokkit;
 import nl.rutgerkok.pokkit.material.PokkitMaterialData;
 import nl.rutgerkok.pokkit.player.PokkitPlayer;
@@ -132,11 +137,6 @@ public class PokkitLivingEntity extends PokkitEntity implements LivingEntity {
 	}
 
 	@Override
-	public List<Block> getLastTwoTargetBlocks(HashSet<Byte> transparent, int maxDistance) {
-		throw Pokkit.unsupported();
-	}
-
-	@Override
 	public List<Block> getLastTwoTargetBlocks(Set<Material> transparent, int maxDistance) {
 		throw Pokkit.unsupported();
 	}
@@ -192,13 +192,6 @@ public class PokkitLivingEntity extends PokkitEntity implements LivingEntity {
 	@Override
 	public boolean getRemoveWhenFarAway() {
 		throw Pokkit.unsupported();
-	}
-
-	@Override
-	public Block getTargetBlock(HashSet<Byte> bukkitTransparent, int maxDistance) {
-		cn.nukkit.block.Block nukkitBlock = nukkit.getTargetBlock(maxDistance, toNukkitBlockIds(bukkitTransparent));
-
-		return PokkitBlock.toBukkit(nukkitBlock);
 	}
 
 	@Override
@@ -335,19 +328,6 @@ public class PokkitLivingEntity extends PokkitEntity implements LivingEntity {
 	@Override
 	public void setRemoveWhenFarAway(boolean remove) {
 		throw Pokkit.unsupported();
-	}
-
-	@SuppressWarnings("deprecation")
-	private Integer[] toNukkitBlockIds(HashSet<Byte> bukkitMaterials) {
-		if (bukkitMaterials == null) {
-			// Bukkit JavaDocs: "set to null for only air"
-			return new Integer[cn.nukkit.block.Block.AIR];
-		}
-		return bukkitMaterials.stream()
-				.map(id -> Material.getMaterial(id))
-				.filter(Objects::nonNull)
-				.map(material -> Integer.valueOf(PokkitMaterialData.fromBukkit(material, 0).getNukkitId()))
-				.toArray(Integer[]::new);
 	}
 
 	private Integer[] toNukkitBlockIds(Set<Material> bukkitMaterials) {
