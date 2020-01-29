@@ -109,14 +109,12 @@ public class PokkitVirtualInventory extends PokkitAbstractInventory {
 
 	@Override
 	public void clear() {
-		throw Pokkit.unsupported();
-
+		contents.clear();
 	}
 
 	@Override
 	public void clear(int index) {
-		throw Pokkit.unsupported();
-
+		contents.get(index).setType(Material.AIR);
 	}
 
 	@Override

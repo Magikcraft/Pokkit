@@ -2,23 +2,15 @@ package org.bukkit.craftbukkit.v1_99_R9;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
+import cn.nukkit.permission.BanEntry;
 import com.google.common.collect.ImmutableMap;
 
+import nl.rutgerkok.pokkit.*;
 import org.bukkit.BanList;
 import org.bukkit.BanList.Type;
 import org.bukkit.GameMode;
@@ -37,10 +29,7 @@ import org.bukkit.World.Environment;
 import org.bukkit.WorldCreator;
 import org.bukkit.advancement.Advancement;
 import org.bukkit.block.data.BlockData;
-import org.bukkit.boss.BarColor;
-import org.bukkit.boss.BarFlag;
-import org.bukkit.boss.BarStyle;
-import org.bukkit.boss.BossBar;
+import org.bukkit.boss.*;
 import org.bukkit.command.CommandException;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
@@ -71,12 +60,6 @@ import org.bukkit.util.CachedServerIcon;
 
 import net.md_5.bungee.api.chat.BaseComponent;
 
-import nl.rutgerkok.pokkit.Pokkit;
-import nl.rutgerkok.pokkit.PokkitGameMode;
-import nl.rutgerkok.pokkit.PokkitHelpMap;
-import nl.rutgerkok.pokkit.PokkitPluginMessenger;
-import nl.rutgerkok.pokkit.PokkitUnsafe;
-import nl.rutgerkok.pokkit.UniqueIdConversion;
 import nl.rutgerkok.pokkit.blockdata.PokkitBlockData;
 import nl.rutgerkok.pokkit.command.PokkitCommandFetcher;
 import nl.rutgerkok.pokkit.command.PokkitCommandSender;
@@ -222,7 +205,26 @@ public final class CraftServer extends Server.Spigot implements Server {
 	@Override
 	public BossBar createBossBar(String arg0, BarColor arg1, BarStyle arg2, BarFlag... arg3) {
 		throw Pokkit.unsupported();
+	}
 
+	@Override
+	public KeyedBossBar createBossBar(NamespacedKey namespacedKey, String s, BarColor barColor, BarStyle barStyle, BarFlag... barFlags) {
+		throw Pokkit.unsupported();
+	}
+
+	@Override
+	public Iterator<KeyedBossBar> getBossBars() {
+		throw Pokkit.unsupported();
+	}
+
+	@Override
+	public KeyedBossBar getBossBar(NamespacedKey namespacedKey) {
+		throw Pokkit.unsupported();
+	}
+
+	@Override
+	public boolean removeBossBar(NamespacedKey namespacedKey) {
+		throw Pokkit.unsupported();
 	}
 
 	@Override
@@ -316,31 +318,34 @@ public final class CraftServer extends Server.Spigot implements Server {
 
 	@Override
 	public boolean getAllowNether() {
-		return false;
+		return nukkit.getPropertyBoolean("allow-nether", true);
 	}
 
 	@Override
 	public int getAmbientSpawnLimit() {
-		throw Pokkit.unsupported();
-
+		return nukkit.getConfig().getInt("spawn-limits.ambient");
 	}
 
 	@Override
 	public int getAnimalSpawnLimit() {
-		throw Pokkit.unsupported();
-
+		return nukkit.getConfig().getInt("spawn-limits.animals");
 	}
 
 	@Override
-	public BanList getBanList(Type arg0) {
-		throw Pokkit.unsupported();
-
+	public BanList getBanList(Type type) {
+		switch (type) {
+			case IP:
+				return PokkitBanList.toBukkit(nukkit.getIPBans());
+			case NAME:
+			default:
+				return PokkitBanList.toBukkit(nukkit.getNameBans());
+		}
 	}
 
 	@Override
 	public Set<OfflinePlayer> getBannedPlayers() {
-		throw Pokkit.unsupported();
-
+		return nukkit.getNameBans().getEntires().values()
+				.stream().map(BanEntry::getName).map(this::getOfflinePlayer).collect(Collectors.toSet());
 	}
 
 	@Override
@@ -394,7 +399,7 @@ public final class CraftServer extends Server.Spigot implements Server {
 
 	@Override
 	public int getIdleTimeout() {
-		throw Pokkit.unsupported();
+		return 10000;
 
 	}
 
@@ -429,9 +434,8 @@ public final class CraftServer extends Server.Spigot implements Server {
 	}
 
 	@Override
-	public MapView getMap(short arg0) {
+	public List<Entity> selectEntities(CommandSender commandSender, String s) throws IllegalArgumentException {
 		throw Pokkit.unsupported();
-
 	}
 
 	@Override
@@ -455,8 +459,7 @@ public final class CraftServer extends Server.Spigot implements Server {
 
 	@Override
 	public int getMonsterSpawnLimit() {
-		throw Pokkit.unsupported();
-
+		return nukkit.getConfig().getInt("spawn-limits.monsters");
 	}
 
 	@Override
@@ -582,9 +585,7 @@ public final class CraftServer extends Server.Spigot implements Server {
 
 	@Override
 	public String getServerName() {
-		// Nukkit has no concept of "server name"
-		// Still, it would be nice if the server admin could change this
-		return "this Minecraft Server";
+		return nukkit.getMotd();
 	}
 
 	@Override
@@ -608,15 +609,18 @@ public final class CraftServer extends Server.Spigot implements Server {
 	}
 
 	@Override
-	public int getTicksPerAnimalSpawns() {
+	public <T extends Keyed> Iterable<Tag<T>> getTags(String s, Class<T> aClass) {
 		throw Pokkit.unsupported();
+	}
 
+	@Override
+	public int getTicksPerAnimalSpawns() {
+		return nukkit.getConfig().getInt("ticks-per.animal-spawns");
 	}
 
 	@Override
 	public int getTicksPerMonsterSpawns() {
-		throw Pokkit.unsupported();
-
+		return nukkit.getConfig().getInt("ticks-per.monster-spawns");
 	}
 
 	@Override
@@ -652,8 +656,7 @@ public final class CraftServer extends Server.Spigot implements Server {
 
 	@Override
 	public int getWaterAnimalSpawnLimit() {
-		throw Pokkit.unsupported();
-
+		return nukkit.getConfig().getInt("spawn-limits.animals");
 	}
 
 	@Override
@@ -672,9 +675,13 @@ public final class CraftServer extends Server.Spigot implements Server {
 	}
 
 	@Override
+	public MapView getMap(int i) {
+		throw Pokkit.unsupported();
+	}
+
+	@Override
 	public File getWorldContainer() {
-		// Copied from nukkit.generateLevel
-		return new File(nukkit.getDataPath() + "worlds/");
+		return new File(nukkit.getDataPath() + "/worlds/");
 	}
 
 	@Override
@@ -841,7 +848,7 @@ public final class CraftServer extends Server.Spigot implements Server {
 
 	@Override
 	public ItemStack createExplorerMap(World w, Location l, StructureType t) {
-		return createExplorerMap(w, l, t);
+		throw Pokkit.unsupported();
 	}
 
 	@Override

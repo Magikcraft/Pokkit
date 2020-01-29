@@ -1,5 +1,7 @@
 package nl.rutgerkok.pokkit.world;
 
+import cn.nukkit.level.biome.EnumBiome;
+import nl.rutgerkok.pokkit.world.biome.PokkitBiome;
 import org.bukkit.ChunkSnapshot;
 import org.bukkit.Material;
 import org.bukkit.block.Biome;
@@ -42,7 +44,7 @@ public class PokkitChunkSnapshot implements ChunkSnapshot {
 
 	@Override
 	public Biome getBiome(int x, int z) {
-		return Biome.PLAINS;
+		return PokkitBiome.toBukkit(nukkit.getBiomeId(x, z));
 	}
 
 	@Override
@@ -52,7 +54,7 @@ public class PokkitChunkSnapshot implements ChunkSnapshot {
 
 	@Override
 	public int getBlockEmittedLight(int x, int y, int z) {
-		throw Pokkit.unsupported();
+		return nukkit.getBlockLight(x, y, z);
 	}
 
 	@Override
@@ -83,8 +85,13 @@ public class PokkitChunkSnapshot implements ChunkSnapshot {
 
 	@Override
 	public double getRawBiomeTemperature(int x, int z) {
-		throw Pokkit.unsupported();
-
+		int biomeId = nukkit.getBiomeId(x, z);
+		@SuppressWarnings("deprecation")
+		cn.nukkit.level.biome.Biome biome = EnumBiome.getBiome(biomeId);
+		if (biome != null && biome.isFreezing()) {
+			return 0.1;
+		}
+		return 0.6;
 	}
 
 	@Override

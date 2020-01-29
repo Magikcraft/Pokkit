@@ -11,6 +11,7 @@ import org.bukkit.entity.ItemFrame;
 import org.bukkit.inventory.ItemStack;
 
 import cn.nukkit.blockentity.BlockEntityItemFrame;
+import org.bukkit.util.BoundingBox;
 
 public class PokkitItemFrameEntity extends PokkitFakeEntity implements ItemFrame {
 	BlockEntityItemFrame nukkit;
@@ -58,6 +59,16 @@ public class PokkitItemFrameEntity extends PokkitFakeEntity implements ItemFrame
 	@Override
 	public boolean isValid() {
 		return nukkit.isBlockEntityValid();
+	}
+
+	@Override
+	public BoundingBox getBoundingBox() {
+		return new BoundingBox(0, 0, 0, 1, 1, 1);
+	}
+
+	@Override
+	public void setRotation(float v, float v1) {
+		throw Pokkit.unsupported();
 	}
 
 	@Override

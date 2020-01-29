@@ -2,9 +2,11 @@ package nl.rutgerkok.pokkit.world;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
-import nl.rutgerkok.pokkit.Pokkit;
+import cn.nukkit.level.Level;
+import cn.nukkit.level.format.FullChunk;
+
+import nl.rutgerkok.pokkit.blockstate.PokkitBlockState;
 import nl.rutgerkok.pokkit.entity.PokkitEntity;
 
 import org.bukkit.Chunk;
@@ -15,11 +17,13 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.entity.Entity;
 
-import cn.nukkit.level.Level;
-
 public final class PokkitChunk implements Chunk {
 
 	private static final int CHUNK_SIZE = 16;
+
+	public static Chunk of(FullChunk chunk) {
+		return new PokkitChunk(chunk);
+	}
 
 	public static Chunk of(Block block) {
 		return new PokkitChunk(block.getWorld(), block.getX() >> 4, block.getZ() >> 4);
@@ -30,18 +34,20 @@ public final class PokkitChunk implements Chunk {
 	}
 
 	private final World world;
-	private final int chunkX;
-	private final int chunkZ;
+	private final FullChunk nukkit;
+
+	PokkitChunk(FullChunk chunk) {
+		this(PokkitWorld.toBukkit(chunk.getProvider().getLevel()), chunk.getX(), chunk.getZ());
+	}
 
 	PokkitChunk(World world, int chunkX, int chunkZ) {
-		this.world = Objects.requireNonNull(world);
-		this.chunkX = chunkX;
-		this.chunkZ = chunkZ;
+		this.world = world;
+		this.nukkit = PokkitWorld.toNukkit(world).getChunk(chunkX, chunkZ);
 	}
 
 	@Override
 	public Block getBlock(int x, int y, int z) {
-		return world.getBlockAt((x & 0xf) + chunkX * CHUNK_SIZE, y, (z & 0xf) + chunkZ * CHUNK_SIZE);
+		return world.getBlockAt((x & 0xf) + nukkit.getX() * CHUNK_SIZE, y, (z & 0xf) + nukkit.getZ() * CHUNK_SIZE);
 	}
 
 	@Override
@@ -52,24 +58,26 @@ public final class PokkitChunk implements Chunk {
 	@Override
 	public ChunkSnapshot getChunkSnapshot(boolean includeMaxblocky, boolean includeBiome,
 			boolean includeBiomeTempRain) {
-		return new PokkitChunkSnapshot(chunkX, chunkZ, world.getName(), PokkitWorld.toNukkit(world).getChunk(chunkX, chunkZ));
+		return new PokkitChunkSnapshot(nukkit.getX(), nukkit.getZ(), world.getName(), PokkitWorld.toNukkit(world).getChunk(nukkit.getX(), nukkit.getZ()));
 	}
 
 	@Override
 	public Entity[] getEntities() {
 		Level level = PokkitWorld.toNukkit(world);
-		List<Entity> entitiesInChunk = new ArrayList<Entity>();
+		List<Entity> entitiesInChunk = new ArrayList<>();
 
-		for (cn.nukkit.entity.Entity entity : level.getChunk(chunkX, chunkZ).getEntities().values()) {
+		for (cn.nukkit.entity.Entity entity : level.getChunk(nukkit.getX(), nukkit.getZ()).getEntities().values()) {
 			entitiesInChunk.add(PokkitEntity.toBukkit(entity));
 		}
-		return entitiesInChunk.toArray(new Entity[entitiesInChunk.size()]);
+		return entitiesInChunk.toArray(new Entity[0]);
 	}
 
 	@Override
 	public BlockState[] getTileEntities() {
-		throw Pokkit.unsupported();
-
+		return nukkit.getBlockEntities().values()
+				.stream().map(blockEntity ->
+						PokkitBlockState.getBlockState(PokkitBlock.toBukkit(blockEntity.getBlock())))
+				.toArray(BlockState[]::new);
 	}
 
 	@Override
@@ -79,17 +87,17 @@ public final class PokkitChunk implements Chunk {
 
 	@Override
 	public int getX() {
-		return chunkX;
+		return nukkit.getX();
 	}
 
 	@Override
 	public int getZ() {
-		return chunkZ;
+		return nukkit.getZ();
 	}
 
 	@Override
 	public boolean isLoaded() {
-		return world.isChunkLoaded(chunkX, chunkZ);
+		return world.isChunkLoaded(nukkit.getX(), nukkit.getZ());
 	}
 
 	@Override
@@ -98,13 +106,23 @@ public final class PokkitChunk implements Chunk {
 	}
 
 	@Override
+	public boolean isForceLoaded() {
+		return false; // silently unsupported
+	}
+
+	@Override
+	public void setForceLoaded(boolean b) {
+		// silently unsupported
+	}
+
+	@Override
 	public boolean load() {
-		return world.loadChunk(chunkX, chunkZ, true);
+		return world.loadChunk(nukkit.getX(), nukkit.getZ(), true);
 	}
 
 	@Override
 	public boolean load(boolean generate) {
-		return world.loadChunk(chunkX, chunkZ, generate);
+		return world.loadChunk(nukkit.getX(), nukkit.getZ(), generate);
 	}
 
 	@Override
@@ -114,13 +132,13 @@ public final class PokkitChunk implements Chunk {
 
 	@Override
 	public boolean unload(boolean save) {
-		return world.unloadChunk(chunkX, chunkZ, save);
+		return world.unloadChunk(nukkit.getX(), nukkit.getZ(), save);
 	}
 
 	@Override
 	@Deprecated
 	public boolean unload(boolean save, boolean safe) {
-		return world.unloadChunk(chunkX, chunkZ, save, safe);
+		return world.unloadChunk(nukkit.getX(), nukkit.getZ(), save, safe);
 	}
 
 }

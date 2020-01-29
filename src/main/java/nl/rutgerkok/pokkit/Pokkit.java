@@ -22,11 +22,11 @@ import java.util.logging.Logger;
 public final class Pokkit {
 
 	public static final String NAME = "Pokkit";
-	static String VERSION = "?";
+	static String VERSION;
 	/**
 	 * Bukkit version. Mutable, so exposed through {@link #getBukkitVersion()}.
 	 */
-	static String BUKKIT_VERSION = "?";
+	static String BUKKIT_VERSION = "1.13.2-R0.1-SNAPSHOT";
 
 	/**
 	 * Makes sure that the given expression is true. If not, an exception is
@@ -102,6 +102,7 @@ public final class Pokkit {
 	}
 
 	public void onLoad(PluginBase plugin) {
+		VERSION = plugin.getDescription().getVersion();
 
 		File pluginFolder = new File(plugin.getDataFolder(), "bukkitPlugins");
 		if (!pluginFolder.exists()) {

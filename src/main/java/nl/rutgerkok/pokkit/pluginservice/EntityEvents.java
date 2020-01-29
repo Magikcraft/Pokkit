@@ -22,7 +22,6 @@ import org.bukkit.event.entity.EntityRegainHealthEvent.RegainReason;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
@@ -135,11 +134,6 @@ public final class EntityEvents extends EventTranslator {
 	private void onEntityDamageByBlock(cn.nukkit.event.entity.EntityDamageByBlockEvent event) {
 		// Called by onEntityDamage, so don't use an @EventHandler annotation
 
-		Class tClass = event.getClass();
-		Method[] methods = tClass.getMethods();
-		for (Method method : methods) {
-			System.out.println("public method: " + method);
-		}
 		// For now, only base damage is taken into account. Potions, armor etc
 		// are ignored
 		EntityDamageByBlockEvent bukkitEvent = new EntityDamageByBlockEvent(
@@ -303,14 +297,10 @@ public final class EntityEvents extends EventTranslator {
 				entity = movingObjectPosition.entityHit;
 			}
 		}
-		// System.out.println(event.getEntity().toString());
 		EntityProjectile nukkitProjectile = (EntityProjectile) event.getEntity();
 		Projectile projectile = PokkitProjectile.toBukkit(nukkitProjectile);
 		ProjectileHitEvent bukkitEvent = new ProjectileHitEvent(projectile, PokkitEntity.toBukkit(entity), PokkitBlock.toBukkit(block));
 
 		callUncancellable(bukkitEvent);
 	}
-
-
-
 }

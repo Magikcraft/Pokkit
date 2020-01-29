@@ -41,13 +41,18 @@ public class PokkitEntityTranslator {
 		case PLAYER:
 			return "Human";
 		case MINECART:
-		case MINECART_CHEST:
 		case MINECART_COMMAND:
 		case MINECART_FURNACE:
-		case MINECART_HOPPER:
 		case MINECART_MOB_SPAWNER:
-		case MINECART_TNT:
 			return "MinecartRideable";
+		case MINECART_CHEST:
+			return "MinecartChest";
+		case MINECART_HOPPER:
+			return "MinecartHopper";
+		case MINECART_TNT:
+			return "MinecartTNT";
+		case TRIDENT:
+			return "ThrownTrident";
 		default:
 			return "null";
 		}

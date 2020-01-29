@@ -110,5 +110,4 @@ public final class PokkitPluginMessenger implements Messenger {
 	public void unregisterOutgoingPluginChannel(Plugin plugin, String channel) {
 		// Do nothing
 	}
-
 }

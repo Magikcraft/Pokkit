@@ -5,10 +5,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
-import org.bukkit.Bukkit;
-import org.bukkit.Chunk;
-import org.bukkit.Location;
-import org.bukkit.Material;
+import org.bukkit.*;
 import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -25,11 +22,15 @@ import nl.rutgerkok.pokkit.blockdata.PokkitBlockData;
 import nl.rutgerkok.pokkit.blockstate.PokkitBlockState;
 import nl.rutgerkok.pokkit.item.PokkitItemStack;
 import nl.rutgerkok.pokkit.metadata.BlockMetadataStore;
+import nl.rutgerkok.pokkit.world.biome.PokkitBiome;
 
 import cn.nukkit.block.BlockAir;
 import cn.nukkit.item.Item;
 import cn.nukkit.item.ItemBlock;
 import cn.nukkit.level.biome.EnumBiome;
+import org.bukkit.util.BoundingBox;
+import org.bukkit.util.RayTraceResult;
+import org.bukkit.util.Vector;
 
 /**
  * Converts between Nukkit and Bukkit blocks.
@@ -74,8 +75,7 @@ public final class PokkitBlock implements Block {
 
 	@Override
 	public Biome getBiome() {
-		throw Pokkit.unsupported();
-
+		return PokkitBiome.toBukkit(nukkit.getLevel().getBiomeId(getX(), getZ()));
 	}
 
 	@Override
@@ -298,14 +298,23 @@ public final class PokkitBlock implements Block {
 	}
 
 	@Override
+	public RayTraceResult rayTrace(Location location, Vector vector, double v, FluidCollisionMode fluidCollisionMode) {
+		throw Pokkit.unsupported();
+	}
+
+	@Override
+	public BoundingBox getBoundingBox() {
+		return new BoundingBox(nukkit.getBoundingBox().getMinX(), nukkit.getBoundingBox().getMinY(), nukkit.getBoundingBox().getMinZ(), nukkit.getBoundingBox().getMaxX(), nukkit.getBoundingBox().getMaxY(), nukkit.getBoundingBox().getMaxZ());
+	}
+
+	@Override
 	public void removeMetadata(String metadataKey, Plugin owningPlugin) {
 		getBlockMetadata().removeMetadata(this, metadataKey, owningPlugin);
 	}
 
 	@Override
-	public void setBiome(Biome bio) {
-		throw Pokkit.unsupported();
-
+	public void setBiome(Biome biome) {
+		nukkit.getLevel().setBiomeId(getX(), getZ(), (byte) PokkitBiome.toNukkit(biome));
 	}
 
 	@Override

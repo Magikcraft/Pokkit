@@ -4,6 +4,7 @@ import org.bukkit.entity.LightningStrike;
 
 import cn.nukkit.entity.Entity;
 import cn.nukkit.entity.weather.EntityLightningStrike;
+import org.bukkit.util.BoundingBox;
 
 public class PokkitEntityLightningStrike extends PokkitEntity implements LightningStrike{
 
@@ -36,6 +37,16 @@ public class PokkitEntityLightningStrike extends PokkitEntity implements Lightni
 	@Override
 	public boolean isEffect() {
 		return ((EntityLightningStrike)nukkit).isEffect();
+	}
+
+	@Override
+	public BoundingBox getBoundingBox() {
+		return new BoundingBox(nukkit.getBoundingBox().getMinX(), nukkit.getBoundingBox().getMinY(), nukkit.getBoundingBox().getMinZ(), nukkit.getBoundingBox().getMaxX(), nukkit.getBoundingBox().getMaxY(), nukkit.getBoundingBox().getMaxZ());
+	}
+
+	@Override
+	public void setRotation(float v, float v1) {
+		nukkit.setRotation(v, v1);
 	}
 
 	@Override

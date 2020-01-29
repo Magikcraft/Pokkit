@@ -1,6 +1,11 @@
 package nl.rutgerkok.pokkit.world;
 
-import org.bukkit.StructureType;
+import cn.nukkit.Server;
+import cn.nukkit.level.generator.Flat;
+import cn.nukkit.level.generator.object.tree.ObjectTree;
+import cn.nukkit.math.NukkitRandom;
+import org.bukkit.*;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -10,23 +15,9 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.SplittableRandom;
 import java.util.UUID;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import org.bukkit.Bukkit;
-import org.bukkit.Chunk;
-import org.bukkit.ChunkSnapshot;
-import org.bukkit.Difficulty;
-import org.bukkit.Effect;
-import org.bukkit.GameRule;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.Particle;
-import org.bukkit.Sound;
-import org.bukkit.SoundCategory;
-import org.bukkit.TreeType;
-import org.bukkit.World;
-import org.bukkit.WorldBorder;
-import org.bukkit.WorldType;
 import org.bukkit.block.Biome;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
@@ -44,7 +35,9 @@ import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.metadata.MetadataValue;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.util.BoundingBox;
 import org.bukkit.util.Consumer;
+import org.bukkit.util.RayTraceResult;
 import org.bukkit.util.Vector;
 
 import nl.rutgerkok.pokkit.Pokkit;
@@ -59,6 +52,7 @@ import nl.rutgerkok.pokkit.item.PokkitItemStack;
 import nl.rutgerkok.pokkit.metadata.WorldMetadataStore;
 import nl.rutgerkok.pokkit.particle.PokkitParticle;
 import nl.rutgerkok.pokkit.player.PokkitPlayer;
+import nl.rutgerkok.pokkit.world.biome.PokkitBiome;
 
 import cn.nukkit.entity.weather.EntityLightning;
 import cn.nukkit.level.Explosion;
@@ -75,8 +69,6 @@ import cn.nukkit.nbt.tag.FloatTag;
 import cn.nukkit.nbt.tag.ListTag;
 
 public final class PokkitWorld implements World {
-
-	private static final int WORLD_HEIGHT = 256;
 
 	/**
 	 * World cache. If Nukkit ever adds world unload support, we'll need to
@@ -175,27 +167,41 @@ public final class PokkitWorld implements World {
 
 	@Override
 	public boolean generateTree(Location location, TreeType type) {
-		throw Pokkit.unsupported();
-
+		switch (type) {
+			case TREE:
+				ObjectTree.growTree(nukkit, location.getBlockX(), location.getBlockY(), location.getBlockZ(), new NukkitRandom(), 0);
+				return true;
+			case BIRCH:
+				ObjectTree.growTree(nukkit, location.getBlockX(), location.getBlockY(), location.getBlockZ(), new NukkitRandom(), 2);
+				return true;
+			case SMALL_JUNGLE:
+				ObjectTree.growTree(nukkit, location.getBlockX(), location.getBlockY(), location.getBlockZ(), new NukkitRandom(), 3);
+				return true;
+			case ACACIA:
+				ObjectTree.growTree(nukkit, location.getBlockX(), location.getBlockY(), location.getBlockZ(), new NukkitRandom(), 4);
+				return true;
+			case DARK_OAK:
+				ObjectTree.growTree(nukkit, location.getBlockX(), location.getBlockY(), location.getBlockZ(), new NukkitRandom(), 5);
+				return true;
+			default:
+				throw Pokkit.unsupported();
+		}
 	}
 
 	@Override
 	@Deprecated
 	public boolean generateTree(Location loc, TreeType type, org.bukkit.BlockChangeDelegate delegate) {
-		throw Pokkit.unsupported();
-
+		return generateTree(loc, type);
 	}
 
 	@Override
 	public boolean getAllowAnimals() {
-		throw Pokkit.unsupported();
-
+		return Server.getInstance().getPropertyBoolean("spawn-animals");
 	}
 
 	@Override
 	public boolean getAllowMonsters() {
-		throw Pokkit.unsupported();
-
+		return Server.getInstance().getPropertyBoolean("spawn-mobs");
 	}
 
 	@Override
@@ -210,8 +216,7 @@ public final class PokkitWorld implements World {
 
 	@Override
 	public Biome getBiome(int x, int z) {
-		throw Pokkit.unsupported();
-
+		return PokkitBiome.toBukkit(nukkit.getBiomeId(x, z));
 	}
 
 	@Override
@@ -242,8 +247,16 @@ public final class PokkitWorld implements World {
 
 	@Override
 	public Difficulty getDifficulty() {
-		throw Pokkit.unsupported();
-
+		switch (Server.getInstance().getDifficulty()) {
+			case 0:
+				return Difficulty.PEACEFUL;
+			case 1:
+				return Difficulty.EASY;
+			case 2:
+				return Difficulty.NORMAL;
+			default:
+				return Difficulty.HARD;
+		}
 	}
 
 	@Override
@@ -379,8 +392,7 @@ public final class PokkitWorld implements World {
 
 	@Override
 	public boolean getKeepSpawnInMemory() {
-		throw Pokkit.unsupported();
-
+		return false;
 	}
 
 	@Override
@@ -408,7 +420,7 @@ public final class PokkitWorld implements World {
 
 		for (FullChunk chunk : nukkit.getChunks().values()) {
 			if (chunk.isLoaded()) {
-				loadedChunks.add(new PokkitChunk(PokkitWorld.toBukkit(nukkit), chunk.getX(), chunk.getZ()));
+				loadedChunks.add(new PokkitChunk(toBukkit(nukkit), chunk.getX(), chunk.getZ()));
 			}
 		}
 
@@ -419,7 +431,7 @@ public final class PokkitWorld implements World {
 
 	@Override
 	public int getMaxHeight() {
-		return WORLD_HEIGHT;
+		return 256;
 	}
 
 	@Override
@@ -429,8 +441,7 @@ public final class PokkitWorld implements World {
 
 	@Override
 	public int getMonsterSpawnLimit() {
-		throw Pokkit.unsupported();
-
+		return Server.getInstance().getConfig().getInt("spawn-limits.monsters");
 	}
 
 	@Override
@@ -441,7 +452,61 @@ public final class PokkitWorld implements World {
 	@Override
 	public Collection<Entity> getNearbyEntities(Location location, double x, double y, double z) {
 		throw Pokkit.unsupported();
+	}
 
+	@Override
+	public Collection<Entity> getNearbyEntities(Location location, double v, double v1, double v2, Predicate<Entity> predicate) {
+		throw Pokkit.unsupported();
+	}
+
+	@Override
+	public Collection<Entity> getNearbyEntities(BoundingBox boundingBox) {
+		throw Pokkit.unsupported();
+	}
+
+	@Override
+	public Collection<Entity> getNearbyEntities(BoundingBox boundingBox, Predicate<Entity> predicate) {
+		throw Pokkit.unsupported();
+	}
+
+	@Override
+	public RayTraceResult rayTraceEntities(Location location, Vector vector, double v) {
+		throw Pokkit.unsupported();
+	}
+
+	@Override
+	public RayTraceResult rayTraceEntities(Location location, Vector vector, double v, double v1) {
+		throw Pokkit.unsupported();
+	}
+
+	@Override
+	public RayTraceResult rayTraceEntities(Location location, Vector vector, double v, Predicate<Entity> predicate) {
+		throw Pokkit.unsupported();
+	}
+
+	@Override
+	public RayTraceResult rayTraceEntities(Location location, Vector vector, double v, double v1, Predicate<Entity> predicate) {
+		throw Pokkit.unsupported();
+	}
+
+	@Override
+	public RayTraceResult rayTraceBlocks(Location location, Vector vector, double v) {
+		throw Pokkit.unsupported();
+	}
+
+	@Override
+	public RayTraceResult rayTraceBlocks(Location location, Vector vector, double v, FluidCollisionMode fluidCollisionMode) {
+		throw Pokkit.unsupported();
+	}
+
+	@Override
+	public RayTraceResult rayTraceBlocks(Location location, Vector vector, double v, FluidCollisionMode fluidCollisionMode, boolean b) {
+		throw Pokkit.unsupported();
+	}
+
+	@Override
+	public RayTraceResult rayTrace(Location location, Vector vector, double v, FluidCollisionMode fluidCollisionMode, boolean b, double v1, Predicate<Entity> predicate) {
+		throw Pokkit.unsupported();
 	}
 
 	@Override
@@ -462,7 +527,7 @@ public final class PokkitWorld implements World {
 
 	@Override
 	public int getSeaLevel() {
-		return WORLD_HEIGHT / 2;
+		return 64;
 	}
 
 	@Override
@@ -488,14 +553,12 @@ public final class PokkitWorld implements World {
 
 	@Override
 	public long getTicksPerAnimalSpawns() {
-		throw Pokkit.unsupported();
-
+		return Server.getInstance().getConfig().getInt("ticks-per.animal-spawns");
 	}
 
 	@Override
 	public long getTicksPerMonsterSpawns() {
-		throw Pokkit.unsupported();
-
+		return Server.getInstance().getConfig().getInt("ticks-per.monster-spawns");
 	}
 
 	@Override
@@ -510,8 +573,7 @@ public final class PokkitWorld implements World {
 
 	@Override
 	public int getWaterAnimalSpawnLimit() {
-		throw Pokkit.unsupported();
-
+		return Server.getInstance().getConfig().getInt("spawn-limits.animals");
 	}
 
 	@Override
@@ -536,8 +598,7 @@ public final class PokkitWorld implements World {
 
 	@Override
 	public WorldType getWorldType() {
-		throw Pokkit.unsupported();
-
+		return nukkit.getGenerator() instanceof Flat ? WorldType.FLAT : WorldType.NORMAL;
 	}
 
 	@Override
@@ -658,8 +719,22 @@ public final class PokkitWorld implements World {
 
 	@Override
 	public boolean refreshChunk(int x, int z) {
-		throw Pokkit.unsupported();
+		return false; // Silently unsupported!
+	}
 
+	@Override
+	public boolean isChunkForceLoaded(int i, int i1) {
+		return false; // silently unsupported
+	}
+
+	@Override
+	public void setChunkForceLoaded(int i, int i1, boolean b) {
+		// silently unsupported
+	}
+
+	@Override
+	public Collection<Chunk> getForceLoadedChunks() {
+		throw Pokkit.unsupported();
 	}
 
 	@Override
@@ -686,14 +761,14 @@ public final class PokkitWorld implements World {
 
 	@Override
 	public void setAmbientSpawnLimit(int limit) {
-		throw Pokkit.unsupported();
-
+		Server.getInstance().getConfig().set("spawn-limits.ambient", limit);
+		Server.getInstance().getConfig().save();
 	}
 
 	@Override
 	public void setAnimalSpawnLimit(int limit) {
-		throw Pokkit.unsupported();
-
+		Server.getInstance().getConfig().set("spawn-limits.animals", limit);
+		Server.getInstance().getConfig().save();
 	}
 
 	@Override
@@ -702,15 +777,13 @@ public final class PokkitWorld implements World {
 	}
 
 	@Override
-	public void setBiome(int x, int z, Biome bio) {
-		throw Pokkit.unsupported();
-
+	public void setBiome(int x, int z, Biome biome) {
+		nukkit.setBiomeId(x, z, (byte) PokkitBiome.toNukkit(biome));
 	}
 
 	@Override
 	public void setDifficulty(Difficulty difficulty) {
-		throw Pokkit.unsupported();
-
+		Server.getInstance().setPropertyInt("difficulty", difficulty.getValue());
 	}
 
 	@Override
@@ -752,7 +825,6 @@ public final class PokkitWorld implements World {
 	@Override
 	public void setKeepSpawnInMemory(boolean keepLoaded) {
 		throw Pokkit.unsupported();
-
 	}
 
 	@Override
@@ -762,20 +834,19 @@ public final class PokkitWorld implements World {
 
 	@Override
 	public void setMonsterSpawnLimit(int limit) {
-		throw Pokkit.unsupported();
-
+		Server.getInstance().getConfig().set("spawn-limits.monsters", limit);
+		Server.getInstance().getConfig().save();
 	}
 
 	@Override
 	public void setPVP(boolean pvp) {
-		throw Pokkit.unsupported();
-
+		Server.getInstance().setPropertyBoolean("pvp", pvp);
 	}
 
 	@Override
 	public void setSpawnFlags(boolean allowMonsters, boolean allowAnimals) {
-		throw Pokkit.unsupported();
-
+		Server.getInstance().setPropertyBoolean("spawn-mobs", allowMonsters);
+		Server.getInstance().setPropertyBoolean("spawn-animals", allowAnimals);
 	}
 
 	@Override
@@ -810,14 +881,14 @@ public final class PokkitWorld implements World {
 
 	@Override
 	public void setTicksPerAnimalSpawns(int ticksPerAnimalSpawns) {
-		throw Pokkit.unsupported();
-
+		Server.getInstance().getConfig().set("ticks-per.animal-spawns", ticksPerAnimalSpawns);
+		Server.getInstance().getConfig().save();
 	}
 
 	@Override
 	public void setTicksPerMonsterSpawns(int ticksPerMonsterSpawns) {
-		throw Pokkit.unsupported();
-
+		Server.getInstance().getConfig().set("ticks-per.monster-spawns", ticksPerMonsterSpawns);
+		Server.getInstance().getConfig().save();
 	}
 
 	@Override
@@ -827,8 +898,8 @@ public final class PokkitWorld implements World {
 
 	@Override
 	public void setWaterAnimalSpawnLimit(int limit) {
-		throw Pokkit.unsupported();
-
+		Server.getInstance().getConfig().set("spawn-limits.water-animals", limit);
+		Server.getInstance().getConfig().save();
 	}
 
 	@Override

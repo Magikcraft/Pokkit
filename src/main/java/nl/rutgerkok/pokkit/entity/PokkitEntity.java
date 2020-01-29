@@ -9,6 +9,7 @@ import java.util.UUID;
 
 import com.google.common.base.Strings;
 
+import nl.rutgerkok.pokkit.world.PokkitBlockFace;
 import org.bukkit.Bukkit;
 import org.bukkit.EntityEffect;
 import org.bukkit.Location;
@@ -26,6 +27,7 @@ import org.bukkit.permissions.Permission;
 import org.bukkit.permissions.PermissionAttachment;
 import org.bukkit.permissions.PermissionAttachmentInfo;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.util.BoundingBox;
 import org.bukkit.util.Vector;
 
 import nl.rutgerkok.pokkit.Pokkit;
@@ -86,7 +88,7 @@ public class PokkitEntity implements Entity {
 
     @Override
 	public boolean addPassenger(Entity passenger) {
-		throw Pokkit.unsupported();
+        return nukkit.mountEntity(PokkitEntity.toNukkit(passenger));
 	}
 
     @Override
@@ -111,7 +113,7 @@ public class PokkitEntity implements Entity {
 
     @Override
     public int getEntityId() {
-        throw Pokkit.unsupported();
+        return (int) nukkit.getId();
     }
 
     @Override
@@ -173,7 +175,7 @@ public class PokkitEntity implements Entity {
 
     @Override
     public Entity getPassenger() {
-        return PokkitEntity.toBukkit(nukkit.riding);
+        return toBukkit(nukkit.riding);
     }
 
     @Override
@@ -277,7 +279,7 @@ public class PokkitEntity implements Entity {
 
     @Override
     public Entity getVehicle() {
-        return PokkitEntity.toBukkit(nukkit.riding);
+        return toBukkit(nukkit.riding);
     }
 
     @Override
@@ -291,18 +293,28 @@ public class PokkitEntity implements Entity {
 	}
 
     @Override
+    public BoundingBox getBoundingBox() {
+        return new BoundingBox(nukkit.getBoundingBox().getMinX(), nukkit.getBoundingBox().getMinY(), nukkit.getBoundingBox().getMinZ(), nukkit.getBoundingBox().getMaxX(), nukkit.getBoundingBox().getMaxY(), nukkit.getBoundingBox().getMaxZ());
+    }
+
+    @Override
     public World getWorld() {
         return PokkitWorld.toBukkit(nukkit.getLevel());
     }
 
     @Override
+    public void setRotation(float v, float v1) {
+        nukkit.setRotation(v, v1);
+    }
+
+    @Override
     public boolean hasGravity() {
-        throw Pokkit.unsupported();
+        return nukkit.getDataFlag(cn.nukkit.entity.Entity.DATA_FLAGS, cn.nukkit.entity.Entity.DATA_FLAG_GRAVITY);
     }
 
     @Override
     public boolean hasMetadata(String metadataKey) {
-        throw Pokkit.unsupported();
+        return nukkit.hasMetadata(metadataKey);
     }
 
     @Override
@@ -471,14 +483,12 @@ public class PokkitEntity implements Entity {
 
     @Override
     public void setGlowing(boolean flag) {
-        throw Pokkit.unsupported();
-
+        // not supported in bedrock edition
     }
 
     @Override
     public void setGravity(boolean gravity) {
-        throw Pokkit.unsupported();
-
+        nukkit.setDataFlag(cn.nukkit.entity.Entity.DATA_FLAGS, cn.nukkit.entity.Entity.DATA_FLAG_GRAVITY, gravity);
     }
 
     @Override
@@ -488,20 +498,17 @@ public class PokkitEntity implements Entity {
 
     @Override
     public void setLastDamageCause(EntityDamageEvent event) {
-        throw Pokkit.unsupported();
-
+        nukkit.setLastDamageCause(new cn.nukkit.event.entity.EntityDamageEvent(nukkit, PokkitDamageCause.toNukkit(event.getCause()), (float) event.getDamage()));
     }
 
     @Override
     public void setMetadata(String metadataKey, MetadataValue newMetadataValue) {
         throw Pokkit.unsupported();
-
     }
 
     @Override
     public void setOp(boolean value) {
         throw Pokkit.unsupported();
-
     }
 
     @Override
@@ -516,13 +523,11 @@ public class PokkitEntity implements Entity {
 
     @Override
     public void setPortalCooldown(int cooldown) {
-        return; // When portals are properly implemented in Nukkit, change this to use Nukkit's API!
     }
 
 	@Override
     public void setSilent(boolean flag) {
-        throw Pokkit.unsupported();
-
+        nukkit.setDataFlag(cn.nukkit.entity.Entity.DATA_FLAGS, cn.nukkit.entity.Entity.DATA_FLAG_SILENT, flag);
     }
 
 	@Override
@@ -567,6 +572,6 @@ public class PokkitEntity implements Entity {
 
     @Override
 	public BlockFace getFacing() {
-		throw Pokkit.unsupported();
+        return PokkitBlockFace.toBukkit(nukkit.getDirection());
 	}
 }

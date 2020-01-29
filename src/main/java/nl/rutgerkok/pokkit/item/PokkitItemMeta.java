@@ -29,6 +29,7 @@ import cn.nukkit.nbt.tag.CompoundTag;
 import cn.nukkit.nbt.tag.ListTag;
 import cn.nukkit.nbt.tag.StringTag;
 import cn.nukkit.nbt.tag.Tag;
+import org.bukkit.inventory.meta.tags.CustomItemTagContainer;
 
 public class PokkitItemMeta extends ItemMeta.Spigot implements ItemMeta, Damageable {
 
@@ -440,6 +441,11 @@ public class PokkitItemMeta extends ItemMeta.Spigot implements ItemMeta, Damagea
 
 	@Override
 	public boolean removeAttributeModifier(Attribute a, AttributeModifier m) {
+		throw Pokkit.unsupported();
+	}
+
+	@Override
+	public CustomItemTagContainer getCustomTagContainer() {
 		throw Pokkit.unsupported();
 	}
 

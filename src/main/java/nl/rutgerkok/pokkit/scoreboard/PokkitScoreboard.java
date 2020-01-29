@@ -13,11 +13,7 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang.Validate;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.scoreboard.DisplaySlot;
-import org.bukkit.scoreboard.Objective;
-import org.bukkit.scoreboard.Score;
-import org.bukkit.scoreboard.Scoreboard;
-import org.bukkit.scoreboard.Team;
+import org.bukkit.scoreboard.*;
 
 public final class PokkitScoreboard implements Scoreboard {
 
@@ -152,15 +148,24 @@ public final class PokkitScoreboard implements Scoreboard {
 	public Objective registerNewObjective(String name, String criteria) throws IllegalArgumentException {
 		Validate.notNull(name, "name");
 		Validate.notNull(criteria, "criteria");
-		Objective objective = new PokkitObjective(name, criteria, this);
+		Objective objective = new PokkitObjective(name, criteria, this, RenderType.INTEGER);
 		this.objectivesByName.put(objective.getName().toLowerCase(), objective);
 		return objective;
 	}
 
 	@Override
-	public Objective registerNewObjective(String name, String criteria, String displayName)
-			throws IllegalArgumentException {
+	public Objective registerNewObjective(String name, String criteria, String displayName) throws IllegalArgumentException {
 		Objective objective = registerNewObjective(name, criteria);
+		objective.setDisplayName(displayName);
+		return objective;
+	}
+
+	@Override
+	public Objective registerNewObjective(String name, String criteria, String displayName, RenderType renderType) throws IllegalArgumentException {
+		Validate.notNull(name, "name");
+		Validate.notNull(criteria, "criteria");
+		Objective objective = new PokkitObjective(name, criteria, this, renderType);
+		this.objectivesByName.put(objective.getName().toLowerCase(), objective);
 		objective.setDisplayName(displayName);
 		return objective;
 	}

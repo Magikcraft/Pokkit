@@ -53,7 +53,7 @@ final class PokkitPotionMeta extends PokkitItemMeta implements PotionMeta {
 
 	@Override
 	public boolean hasColor() {
-		throw Pokkit.unsupported();
+		return false; // Silently unsupported!
 	}
 
 	@Override

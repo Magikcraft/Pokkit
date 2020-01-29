@@ -87,6 +87,11 @@ public class PokkitBlockData implements BlockData {
 	}
 
 	@Override
+	public String getAsString(boolean b) {
+		return this.getAsString();
+	}
+
+	@Override
 	public Material getMaterial() {
 		return BlockMap.getMaterial(block.getId());
 	}

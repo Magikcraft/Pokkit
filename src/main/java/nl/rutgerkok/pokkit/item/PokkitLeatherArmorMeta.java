@@ -1,9 +1,11 @@
 package nl.rutgerkok.pokkit.item;
 
+import nl.rutgerkok.pokkit.Pokkit;
 import org.bukkit.Color;
 import org.bukkit.inventory.meta.LeatherArmorMeta;
 
 import cn.nukkit.nbt.tag.CompoundTag;
+import org.bukkit.inventory.meta.tags.CustomItemTagContainer;
 
 public class PokkitLeatherArmorMeta extends PokkitItemMeta implements LeatherArmorMeta {
 
@@ -11,6 +13,11 @@ public class PokkitLeatherArmorMeta extends PokkitItemMeta implements LeatherArm
 		super(tag, damage);
 	}
 
+
+	@Override
+	public CustomItemTagContainer getCustomTagContainer() {
+		throw Pokkit.unsupported();
+	}
 
 	@Override
 	public PokkitLeatherArmorMeta clone() {
@@ -39,7 +46,4 @@ public class PokkitLeatherArmorMeta extends PokkitItemMeta implements LeatherArm
         this.getTag().putInt("green", color.getGreen());//If you find a better way to do this, PLEASE tell me.
         this.getTag().putInt("blue", color.getBlue());//If you find a better way to do this, PLEASE tell me.
 	}
-
-
-
 }

@@ -50,5 +50,4 @@ public final class PokkitHelpMap implements HelpMap {
 	public void registerHelpTopicFactory(Class<?> commandClass, HelpTopicFactory<?> factory) {
 		// Help topics are not implemented yet
 	}
-
 }

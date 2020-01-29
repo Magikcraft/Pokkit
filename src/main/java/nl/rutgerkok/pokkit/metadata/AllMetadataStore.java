@@ -2,6 +2,7 @@ package nl.rutgerkok.pokkit.metadata;
 
 import java.util.List;
 
+import nl.rutgerkok.pokkit.Pokkit;
 import org.bukkit.metadata.MetadataValue;
 
 import cn.nukkit.level.Level;
@@ -21,8 +22,7 @@ public final class AllMetadataStore {
 	}
 
 	public List<MetadataValue> getBlockMetadata(Level level) {
-		// TODO Auto-generated method stub
-		return null;
+		throw Pokkit.unsupported();
 	}
 
 	public PlayerMetadataStore getPlayerMetadata() {

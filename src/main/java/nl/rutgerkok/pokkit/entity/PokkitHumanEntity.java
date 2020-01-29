@@ -1,6 +1,7 @@
 package nl.rutgerkok.pokkit.entity;
 
 import nl.rutgerkok.pokkit.Pokkit;
+import nl.rutgerkok.pokkit.inventory.PokkitInventory;
 import nl.rutgerkok.pokkit.inventory.PokkitPlayerInventory;
 import nl.rutgerkok.pokkit.item.PokkitItemStack;
 import nl.rutgerkok.pokkit.player.PokkitPlayer;
@@ -44,7 +45,7 @@ public class PokkitHumanEntity extends PokkitLivingEntity implements HumanEntity
 
 	@Override
 	public void closeInventory() {
-		throw Pokkit.unsupported();
+		nukkit.close();
 	}
 
 	@Override
@@ -54,7 +55,7 @@ public class PokkitHumanEntity extends PokkitLivingEntity implements HumanEntity
 
 	@Override
 	public Inventory getEnderChest() {
-		throw Pokkit.unsupported();
+		return PokkitInventory.toBukkit(nukkit.getEnderChestInventory());
 	}
 
 	@Override
@@ -79,12 +80,14 @@ public class PokkitHumanEntity extends PokkitLivingEntity implements HumanEntity
 
 	@Override
 	public ItemStack getItemOnCursor() {
-		throw Pokkit.unsupported();
+		// In Bukkit, this gets the item in the current hand, which in Nukkit
+		// only the main hand is implemented
+		return getItemInHand();
 	}
 
 	@Override
 	public MainHand getMainHand() {
-		return MainHand.LEFT;
+		return MainHand.RIGHT;
 	}
 
 	@Override
@@ -104,6 +107,36 @@ public class PokkitHumanEntity extends PokkitLivingEntity implements HumanEntity
 
 	@Override
 	public int getSleepTicks() {
+		throw Pokkit.unsupported();
+	}
+
+	@Override
+	public Location getBedSpawnLocation() {
+		throw Pokkit.unsupported();
+	}
+
+	@Override
+	public void setBedSpawnLocation(Location location) {
+		throw Pokkit.unsupported();
+	}
+
+	@Override
+	public void setBedSpawnLocation(Location location, boolean b) {
+		throw Pokkit.unsupported();
+	}
+
+	@Override
+	public boolean sleep(Location location, boolean b) {
+		throw Pokkit.unsupported();
+	}
+
+	@Override
+	public void wakeup(boolean b) {
+		throw Pokkit.unsupported();
+	}
+
+	@Override
+	public Location getBedLocation() {
 		throw Pokkit.unsupported();
 	}
 
@@ -174,7 +207,9 @@ public class PokkitHumanEntity extends PokkitLivingEntity implements HumanEntity
 
 	@Override
 	public void setItemOnCursor(ItemStack item) {
-		throw Pokkit.unsupported();
+		// In Bukkit, this sets the item in the current hand, which in Nukkit
+		// only the main hand is implemented
+		setItemInHand(item);
 	}
 
 	@Override

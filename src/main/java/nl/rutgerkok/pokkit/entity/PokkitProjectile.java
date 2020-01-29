@@ -3,6 +3,7 @@ package nl.rutgerkok.pokkit.entity;
 import nl.rutgerkok.pokkit.Pokkit;
 import org.bukkit.entity.Projectile;
 import org.bukkit.projectiles.ProjectileSource;
+import org.bukkit.util.BoundingBox;
 
 public class PokkitProjectile extends PokkitEntity implements Projectile {
 
@@ -58,6 +59,16 @@ public class PokkitProjectile extends PokkitEntity implements Projectile {
      */
     public void setBounce(boolean doesBounce) {
         throw Pokkit.unsupported();
+    }
+
+    @Override
+    public BoundingBox getBoundingBox() {
+        return new BoundingBox(nukkit.getBoundingBox().getMinX(), nukkit.getBoundingBox().getMinY(), nukkit.getBoundingBox().getMinZ(), nukkit.getBoundingBox().getMaxX(), nukkit.getBoundingBox().getMaxY(), nukkit.getBoundingBox().getMaxZ());
+    }
+
+    @Override
+    public void setRotation(float v, float v1) {
+        nukkit.setRotation(v, v1);
     }
 }
 

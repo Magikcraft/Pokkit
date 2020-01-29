@@ -2,10 +2,13 @@ package nl.rutgerkok.pokkit.command;
 
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
-import nl.rutgerkok.pokkit.Pokkit;
 import nl.rutgerkok.pokkit.permission.PokkitPermission;
+import nl.rutgerkok.pokkit.permission.PokkitPermissionAttachment;
+import nl.rutgerkok.pokkit.permission.PokkitPermissionAttachmentInfo;
 import nl.rutgerkok.pokkit.player.PokkitPlayer;
+import nl.rutgerkok.pokkit.plugin.PokkitPlugin;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
@@ -53,27 +56,36 @@ public class PokkitCommandSender extends CommandSender.Spigot implements Command
 
 	@Override
 	public PermissionAttachment addAttachment(Plugin plugin) {
-		throw Pokkit.unsupported();
+		return PokkitPermissionAttachment.toBukkit(nukkit.addAttachment(PokkitPlugin.toNukkit(plugin)));
 	}
 
 	@Override
 	public PermissionAttachment addAttachment(Plugin plugin, int ticks) {
-		throw Pokkit.unsupported();
+		PermissionAttachment attachment = addAttachment(plugin);
+		nukkit.getServer().getScheduler().scheduleDelayedTask(PokkitPlugin.toNukkit(plugin), () ->
+				removeAttachment(attachment), ticks);
+		return attachment;
 	}
 
 	@Override
 	public PermissionAttachment addAttachment(Plugin plugin, String name, boolean value) {
-		throw Pokkit.unsupported();
+		return PokkitPermissionAttachment.toBukkit(nukkit.addAttachment(PokkitPlugin.toNukkit(plugin), name, value));
 	}
 
 	@Override
 	public PermissionAttachment addAttachment(Plugin plugin, String name, boolean value, int ticks) {
-		throw Pokkit.unsupported();
+		PermissionAttachment attachment = addAttachment(plugin, name, value);
+		nukkit.getServer().getScheduler().scheduleDelayedTask(PokkitPlugin.toNukkit(plugin), () ->
+				removeAttachment(attachment), ticks);
+		return attachment;
 	}
 
 	@Override
 	public Set<PermissionAttachmentInfo> getEffectivePermissions() {
-		throw Pokkit.unsupported();
+		return nukkit.getEffectivePermissions().values()
+				.stream()
+				.map(PokkitPermissionAttachmentInfo::toBukkit)
+				.collect(Collectors.toSet());
 	}
 
 	@Override
@@ -118,7 +130,7 @@ public class PokkitCommandSender extends CommandSender.Spigot implements Command
 
 	@Override
 	public void removeAttachment(PermissionAttachment attachment) {
-		throw Pokkit.unsupported();
+		nukkit.removeAttachment(PokkitPermissionAttachment.toNukkit(attachment));
 	}
 
 	@Override

@@ -5,6 +5,7 @@ import java.util.Objects;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
+import java.util.function.Consumer;
 
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -93,6 +94,11 @@ public final class PokkitScheduler implements BukkitScheduler {
 	}
 
 	@Override
+	public void runTask(Plugin plugin, Consumer<BukkitTask> consumer) throws IllegalArgumentException {
+		throw Pokkit.unsupported();
+	}
+
+	@Override
 	public BukkitTask runTaskAsynchronously(Plugin plugin, BukkitRunnable runnable) throws IllegalArgumentException {
 		Objects.requireNonNull(plugin, "plugin");
 		return new PokkitTask(nukkit.scheduleTask(PokkitPlugin.toNukkit(plugin), runnable, true), plugin);
@@ -105,6 +111,11 @@ public final class PokkitScheduler implements BukkitScheduler {
 	}
 
 	@Override
+	public void runTaskAsynchronously(Plugin plugin, Consumer<BukkitTask> consumer) throws IllegalArgumentException {
+		throw Pokkit.unsupported();
+	}
+
+	@Override
 	public BukkitTask runTaskLater(Plugin plugin, BukkitRunnable runnable, long delay) throws IllegalArgumentException {
 		Objects.requireNonNull(plugin, "plugin");
 		return new PokkitTask(nukkit.scheduleDelayedTask(PokkitPlugin.toNukkit(plugin), runnable, (int) delay), plugin);
@@ -114,6 +125,11 @@ public final class PokkitScheduler implements BukkitScheduler {
 	public BukkitTask runTaskLater(Plugin plugin, Runnable task, long delay) throws IllegalArgumentException {
 		Objects.requireNonNull(plugin, "plugin");
 		return new PokkitTask(nukkit.scheduleDelayedTask(PokkitPlugin.toNukkit(plugin), task, (int) delay), plugin);
+	}
+
+	@Override
+	public void runTaskLater(Plugin plugin, Consumer<BukkitTask> consumer, long l) throws IllegalArgumentException {
+		throw Pokkit.unsupported();
 	}
 
 	@Override
@@ -133,6 +149,11 @@ public final class PokkitScheduler implements BukkitScheduler {
 	}
 
 	@Override
+	public void runTaskLaterAsynchronously(Plugin plugin, Consumer<BukkitTask> consumer, long l) throws IllegalArgumentException {
+		throw Pokkit.unsupported();
+	}
+
+	@Override
 	public BukkitTask runTaskTimer(Plugin plugin, BukkitRunnable task, long delay, long period)
 			throws IllegalArgumentException {
 		return new PokkitTask(
@@ -149,6 +170,11 @@ public final class PokkitScheduler implements BukkitScheduler {
 	}
 
 	@Override
+	public void runTaskTimer(Plugin plugin, Consumer<BukkitTask> consumer, long l, long l1) throws IllegalArgumentException {
+		throw Pokkit.unsupported();
+	}
+
+	@Override
 	public BukkitTask runTaskTimerAsynchronously(Plugin plugin, BukkitRunnable task, long delay, long period)
 			throws IllegalArgumentException {
 		return runTaskTimer(plugin, () -> {
@@ -162,6 +188,11 @@ public final class PokkitScheduler implements BukkitScheduler {
 		return runTaskTimer(plugin, () -> {
 			runTaskAsynchronously(plugin, task);
 		}, delay, period);
+	}
+
+	@Override
+	public void runTaskTimerAsynchronously(Plugin plugin, Consumer<BukkitTask> consumer, long l, long l1) throws IllegalArgumentException {
+		throw Pokkit.unsupported();
 	}
 
 	@Override

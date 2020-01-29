@@ -77,5 +77,4 @@ public class PokkitLogger extends Logger {
 		this.setUseParentHandlers(false);
 		this.addHandler(new PokkitHandler(nukkit));
 	}
-
 }

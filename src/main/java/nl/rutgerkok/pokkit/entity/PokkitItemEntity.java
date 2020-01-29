@@ -11,9 +11,10 @@ import nl.rutgerkok.pokkit.Pokkit;
 import nl.rutgerkok.pokkit.item.PokkitItemStack;
 
 import cn.nukkit.level.Location;
+import org.bukkit.util.BoundingBox;
 
 /**
- * In Bukkit, dropped items are always entities. This is not the case in Nukkit,
+ * In Bukkit, dropped items are always entities. This is not the case in Nukkit (???),
  * so here we have a "fake entity" implementation.
  *
  */
@@ -40,6 +41,16 @@ public class PokkitItemEntity extends PokkitFakeEntity implements Item {
 	@Override
 	public int getPickupDelay() {
 		return 0;
+	}
+
+	@Override
+	public BoundingBox getBoundingBox() {
+		return new BoundingBox(this.getBoundingBox().getMinX(), this.getBoundingBox().getMinY(), this.getBoundingBox().getMinZ(), this.getBoundingBox().getMaxX(), this.getBoundingBox().getMaxY(), this.getBoundingBox().getMaxZ());
+	}
+
+	@Override
+	public void setRotation(float v, float v1) {
+		this.setRotation(v, v1);
 	}
 
 	@Override

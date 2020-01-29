@@ -1,4 +1,4 @@
-# Pokkit  [![Build Status](https://travis-ci.org/rutgerkok/Pokkit.svg?branch=master)](https://travis-ci.org/rutgerkok/Pokkit)
+# Pokkit [![CircleCI](https://circleci.com/gh/PetteriM1/Pokkit.svg?style=svg)](https://circleci.com/gh/PetteriM1/Pokkit)
 
 The Minecraft multiplayer scene is fragmented. There are many competing server implementations. A popular server is [Spigot](http://www.spigotmc.org/). Spigot is able to load plugins, which can interact with Minecraft through the Spigot Plugin API. For Minecraft Pocket Edition, the mobile version of Minecraft, a server with a plugin API similar to Spigot exists: [Nukkit](https://nukkitx.com/). Unfortunately, plugins written for Spigot cannot run on Nukkit.
 
@@ -16,7 +16,7 @@ While testing your plugin, you will most likely come accross an unimplemented me
 To get started writing code for Pokkit, I have created a [file with examples](./IMPL_EXAMPLES.md) on how I implemented the methods.
 
 ## Download and usage
-Download the latest release [here](https://github.com/rutgerkok/Pokkit/releases). Install Pokkit like you would install any Nukkit plugin: place the JAR file in the `plugins` directory of your Nukkit server. Start your server, then stop it again. You'll notice that a new folder has been created inside the `plugins` directory: a folder called `Pokkit`. Open this folder. Inside the folder, there a three things:
+Download the latest release [here](https://nukkitx.com/resources/pokkit.21/). Install Pokkit like you would install any Nukkit plugin: place the JAR file in the `plugins` directory of your Nukkit server. Start your server, then stop it again. You'll notice that a new folder has been created inside the `plugins` directory: a folder called `Pokkit`. Open this folder. Inside the folder, there a three things:
 
 * A folder called `bukkitPlugins`: place any plugin written for Spigot in this folder.
 * A file called `permissions.yml`: this is Bukkit's [permissions.yml file](http://wiki.bukkit.org/Permissions.yml).

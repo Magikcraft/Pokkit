@@ -11,17 +11,17 @@ public class PokkitParticle {
 		case BLOCK_CRACK:
 			break;
 		case BLOCK_DUST:
-			break;
+			return cn.nukkit.level.particle.Particle.TYPE_DUST;
 		case CLOUD:
 			return cn.nukkit.level.particle.Particle.TYPE_SMOKE;
 		case CRIT:
 			return cn.nukkit.level.particle.Particle.TYPE_CRITICAL;
 		case CRIT_MAGIC:
-			break;
+			return cn.nukkit.level.particle.Particle.TYPE_CRITICAL;
 		case DAMAGE_INDICATOR:
 			break;
 		case DRAGON_BREATH:
-			break;
+			return cn.nukkit.level.particle.Particle.TYPE_DRAGONS_BREATH;
 		case DRIP_LAVA:
 			return cn.nukkit.level.particle.Particle.TYPE_DRIP_LAVA;
 		case DRIP_WATER:
@@ -29,7 +29,7 @@ public class PokkitParticle {
 		case ENCHANTMENT_TABLE:
 			return cn.nukkit.level.particle.Particle.TYPE_ENCHANTMENT_TABLE;
 		case END_ROD:
-			break;
+			return cn.nukkit.level.particle.Particle.TYPE_END_ROD;
 		case EXPLOSION_HUGE:
 			return cn.nukkit.level.particle.Particle.TYPE_HUGE_EXPLODE;
 		case EXPLOSION_LARGE:
@@ -39,7 +39,7 @@ public class PokkitParticle {
 		case FALLING_DUST:
 			return cn.nukkit.level.particle.Particle.TYPE_DUST;
 		case FIREWORKS_SPARK:
-			break;
+			return cn.nukkit.level.particle.Particle.TYPE_FIREWORKS_SPARK;
 		case FLAME:
 			return cn.nukkit.level.particle.Particle.TYPE_FLAME;
 		case HEART:
@@ -51,7 +51,7 @@ public class PokkitParticle {
 		case MOB_APPEARANCE:
 			break;
 		case NOTE:
-			break;
+			return cn.nukkit.level.particle.Particle.TYPE_NOTE;
 		case PORTAL:
 			return cn.nukkit.level.particle.Particle.TYPE_PORTAL;
 		case REDSTONE:
@@ -63,7 +63,7 @@ public class PokkitParticle {
 		case SMOKE_NORMAL:
 			return cn.nukkit.level.particle.Particle.TYPE_SMOKE;
 		case SNOWBALL:
-			break;
+			return cn.nukkit.level.particle.Particle.TYPE_SNOWBALL_POOF;
 		case SNOW_SHOVEL:
 			return cn.nukkit.level.particle.Particle.TYPE_SNOWBALL_POOF;
 		case SPELL:
@@ -75,7 +75,7 @@ public class PokkitParticle {
 		case SPELL_MOB_AMBIENT:
 			return cn.nukkit.level.particle.Particle.TYPE_MOB_SPELL_AMBIENT;
 		case SPELL_WITCH:
-			break;
+			return cn.nukkit.level.particle.Particle.TYPE_WITCH_SPELL;
 		case SUSPENDED:
 			break;
 		case SUSPENDED_DEPTH:
@@ -89,7 +89,7 @@ public class PokkitParticle {
 		case VILLAGER_HAPPY:
 			return cn.nukkit.level.particle.Particle.TYPE_VILLAGER_HAPPY;
 		case WATER_BUBBLE:
-			break;
+			return cn.nukkit.level.particle.Particle.TYPE_BUBBLE;
 		case WATER_DROP:
 			return cn.nukkit.level.particle.Particle.TYPE_RAIN_SPLASH;
 		case WATER_SPLASH:
@@ -97,9 +97,9 @@ public class PokkitParticle {
 		case WATER_WAKE:
 			return cn.nukkit.level.particle.Particle.TYPE_WATER_WAKE;
 		case BUBBLE_COLUMN_UP:
-			break;
+			return cn.nukkit.level.particle.Particle.TYPE_BUBBLE_COLUMN_UP;
 		case BUBBLE_POP:
-			break;
+			return cn.nukkit.level.particle.Particle.TYPE_BUBBLE;
 		case CURRENT_DOWN:
 			break;
 		case DOLPHIN:
@@ -107,17 +107,17 @@ public class PokkitParticle {
 		case LEGACY_BLOCK_CRACK:
 			break;
 		case LEGACY_BLOCK_DUST:
-			break;
+			return cn.nukkit.level.particle.Particle.TYPE_DUST;
 		case LEGACY_FALLING_DUST:
-			break;
+			return cn.nukkit.level.particle.Particle.TYPE_FALLING_DUST;
 		case NAUTILUS:
 			break;
 		case SPIT:
-			break;
+			return cn.nukkit.level.particle.Particle.TYPE_SPIT;
 		case SQUID_INK:
-			break;
+			return cn.nukkit.level.particle.Particle.TYPE_INK;
 		case TOTEM:
-			break;
+			return cn.nukkit.level.particle.Particle.TYPE_TOTEM;
 		default:
 			break;
 		}

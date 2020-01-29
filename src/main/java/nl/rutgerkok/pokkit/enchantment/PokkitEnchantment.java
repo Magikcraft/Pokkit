@@ -56,7 +56,7 @@ public class PokkitEnchantment {
 			return;
 		}
 		for (cn.nukkit.item.enchantment.Enchantment nukkitEnchantment : cn.nukkit.item.enchantment.Enchantment.getEnchantments()) {
-			Enchantment bukkitWrapper = PokkitEnchantment.toBukkit(nukkitEnchantment.getId());
+			Enchantment bukkitWrapper = toBukkit(nukkitEnchantment.getId());
 			Enchantment bukkitImpl = new PokkitEnchantmentImpl(nukkitEnchantment, bukkitWrapper.getKey());
 
 			Enchantment.registerEnchantment(bukkitImpl);

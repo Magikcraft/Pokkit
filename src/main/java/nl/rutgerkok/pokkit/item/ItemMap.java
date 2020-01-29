@@ -212,6 +212,19 @@ public class ItemMap {
 		registerTwoWay(ItemID.RECORD_WARD, Material.MUSIC_DISC_WARD);
 		registerTwoWay(ItemID.RECORD_11, Material.MUSIC_DISC_11);
 		registerTwoWay(ItemID.RECORD_WAIT, Material.MUSIC_DISC_WAIT);
+		registerTwoWay(ItemID.TRIDENT, Material.TRIDENT);
+		registerTwoWay(ItemID.TURTLE_SHELL, Material.TURTLE_HELMET);
+		registerTwoWay(ItemID.KELP, Material.KELP);
+		registerTwoWay(ItemID.DRIED_KELP, Material.DRIED_KELP);
+		registerTwoWay(ItemID.FIREWORKSCHARGE, Material.FIREWORK_STAR);
+		registerTwoWay(ItemID.ARMOR_STAND, Material.ARMOR_STAND);
+		registerTwoWay(ItemID.COMMAND_BLOCK_MINECART, Material.COMMAND_BLOCK_MINECART);
+		registerTwoWay(ItemID.TOTEM, Material.TOTEM_OF_UNDYING);
+		registerTwoWay(ItemID.IRON_NUGGET, Material.IRON_NUGGET);
+		registerTwoWay(ItemID.NAUTILUS_SHELL, Material.NAUTILUS_SHELL);
+		registerTwoWay(ItemID.HEART_OF_THE_SEA, Material.HEART_OF_THE_SEA);
+		registerTwoWay(ItemID.SCUTE, Material.SCUTE);
+		registerTwoWay(ItemID.PHANTOM_MEMBRANE, Material.PHANTOM_MEMBRANE);
 
 		// Legacy items
 		registerBukkitToNukkit(ItemID.IRON_SHOVEL, Material.LEGACY_IRON_SPADE);
@@ -411,6 +424,11 @@ public class ItemMap {
 		registerBukkitToNukkit(ItemID.RECORD_WARD, Material.LEGACY_RECORD_10);
 		registerBukkitToNukkit(ItemID.RECORD_11, Material.LEGACY_RECORD_11);
 		registerBukkitToNukkit(ItemID.RECORD_WAIT, Material.LEGACY_RECORD_12);
+		registerBukkitToNukkit(ItemID.BANNER, Material.LEGACY_BANNER);
+		registerBukkitToNukkit(ItemID.ARMOR_STAND, Material.LEGACY_ARMOR_STAND);
+		registerBukkitToNukkit(ItemID.COMMAND_BLOCK_MINECART, Material.LEGACY_COMMAND_MINECART);
+		registerBukkitToNukkit(ItemID.TOTEM, Material.LEGACY_TOTEM);
+		registerBukkitToNukkit(ItemID.IRON_NUGGET, Material.LEGACY_IRON_NUGGET);
 	}
 
 	/**

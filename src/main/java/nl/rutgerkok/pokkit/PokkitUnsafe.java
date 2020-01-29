@@ -73,5 +73,4 @@ public class PokkitUnsafe implements UnsafeValues {
 	public Material toLegacy(Material material) {
 		return material;
 	}
-
 }
